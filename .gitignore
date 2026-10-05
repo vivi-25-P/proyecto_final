@@ -1,0 +1,14 @@
+# Entorno virtual
+.venv/
+
+# Caches de Python y Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Archivos temporales de Office (bloqueos y temporales de Word)
+~$*
+~*.tmp
+
+# Configuración local del editor
+.vscode/

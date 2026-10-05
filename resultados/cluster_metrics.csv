@@ -1,0 +1,5 @@
+,Silhouette ↑,Davies-Bouldin ↓,Calinski-Harabasz ↑
+K-Means,0.7451,0.6131,7921.33
+DBSCAN,0.6027,0.3452,125.38
+GMM,0.2845,1.221,817.44
+AE + K-Means,0.7034,0.5873,5078.33
