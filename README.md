@@ -7,11 +7,13 @@ Este proyecto analiza el dataset Online Retail para segmentar clientes mediante 
 - [customer_segmentation.ipynb](customer_segmentation.ipynb): notebook principal con el flujo completo del análisis.
 - [dashboard.py](dashboard.py): dashboard interactivo para explorar la segmentación.
 - [data/Online Retail.xlsx](data/Online%20Retail.xlsx): dataset original.
+- [requirements.txt](requirements.txt): dependencias del proyecto con versiones fijadas.
+- [documento](documento): informe escrito del proyecto.
 - [resultados](resultados): carpeta de salida con CSV e imágenes generadas.
 
 ## Requisitos
 
-- Python 3.10 o superior
+- Python 3.12 (versión con la que se probó `requirements.txt`)
 - Windows, macOS o Linux
 - Conexión a internet para instalar dependencias
 
@@ -32,8 +34,14 @@ Windows PowerShell:
 ## 2) Instalar dependencias
 
 ```bash
-pip install --upgrade pip
-pip install pandas numpy matplotlib seaborn scikit-learn plotly dash dash-bootstrap-components openpyxl jupyter nbformat ipykernel tensorflow
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Para ejecutar el notebook desde Jupyter con este entorno, registra el kernel (el notebook usa el kernel `proyecto_final4`):
+
+```bash
+python -m ipykernel install --user --name proyecto_final4 --display-name "Python (.venv)"
 ```
 
 ## 3) Ejecutar el notebook
@@ -97,7 +105,3 @@ python -c "from pathlib import Path; root=Path('.'); print((root/'resultados'/'r
 ```
 
 Si ambos valores devuelven `True`, los datos están listos para el dashboard.
-
-
-cd "C:\Users\USUARIO\Documents\ESPECIALIZACIÓN\proyecto_final4"
-python -m jupyter notebook

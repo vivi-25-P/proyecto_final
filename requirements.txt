@@ -1,0 +1,25 @@
+# Versiones probadas con Python 3.12
+
+# Datos
+pandas==3.0.5
+numpy==2.5.2
+openpyxl==3.1.5
+
+# Machine Learning y Deep Learning
+scikit-learn==1.9.0
+tensorflow==2.21.0
+
+# Visualización
+matplotlib==3.11.1
+seaborn==0.13.2
+plotly==7.0.0
+
+# Dashboard
+dash==4.4.1
+dash-bootstrap-components==2.0.4
+
+# Notebook
+jupyter==1.1.1
+nbconvert==7.17.1
+nbformat==5.11.1
+ipykernel==7.3.0

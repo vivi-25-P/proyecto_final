@@ -85,6 +85,10 @@ metrics_df = pd.read_csv(metrics_path)
 segments_all = sorted(df['Segmento'].unique())
 countries_all = sorted(df['Country'].dropna().unique())
 
+# Tope del slider de gasto: percentil 99 para que los extremos no aplasten la escala.
+# El extremo superior del slider significa "sin límite" (incluye a los clientes por encima).
+MONETARY_SLIDER_MAX = int(df['Monetary'].quantile(0.99))
+
 # ──────────────────────────────────────────────────────────────
 # HELPERS
 # ──────────────────────────────────────────────────────────────
@@ -142,9 +146,10 @@ sidebar = dbc.Card([
     html.Label('Rango de Gasto (Monetary £)', className='fw-semibold small'),
     dcc.RangeSlider(
         id='filter-monetary',
-        min=0, max=int(df['Monetary'].quantile(0.99)),
+        min=0, max=MONETARY_SLIDER_MAX,
         step=100,
-        value=[0, int(df['Monetary'].quantile(0.99))],
+        value=[0, MONETARY_SLIDER_MAX],
+        marks={0: '£0', MONETARY_SLIDER_MAX: f'£{MONETARY_SLIDER_MAX:,}+'},
         tooltip={'placement': 'bottom', 'always_visible': False},
         className='mb-3',
     ),
@@ -216,7 +221,10 @@ def filter_data(segments, countries, monetary_range):
     if countries:
         dff = dff[dff['Country'].isin(countries)]
     if monetary_range:
-        dff = dff[(dff['Monetary'] >= monetary_range[0]) & (dff['Monetary'] <= monetary_range[1])]
+        low, high = monetary_range
+        dff = dff[dff['Monetary'] >= low]
+        if high < MONETARY_SLIDER_MAX:
+            dff = dff[dff['Monetary'] <= high]
     return dff
 
 
@@ -441,6 +449,7 @@ def render_tab(active_tab, segments, countries, monetary_range, viz_technique):
     # ─────────── MÉTRICAS ───────────
     elif active_tab == 'metrics':
         metrics_df2 = metrics_df.rename(columns={'Unnamed: 0': 'Modelo'}).set_index('Modelo')
+        best_model = metrics_df2['Silhouette ↑'].idxmax()
 
         fig_sil = px.bar(
             metrics_df2.reset_index(), x='Modelo', y='Silhouette ↑',
@@ -489,8 +498,8 @@ def render_tab(active_tab, segments, countries, monetary_range, viz_technique):
             html.H5('📋 Resumen de Métricas', className='fw-bold mb-2'),
             tbl_m,
             dbc.Alert([
-                html.Strong('🏆 Mejor modelo: AE + K-Means (Autoencoder) '),
-                'con Silhouette Score de 0.9406, indicando clusters muy bien separados en el espacio latente aprendido.'
+                html.Strong(f'🏆 Mejor modelo según Silhouette: {best_model} '),
+                f'con Silhouette Score de {metrics_df2.loc[best_model, "Silhouette ↑"]:.4f}.'
             ], color='success', className='mt-3'),
         ])
 
@@ -553,4 +562,4 @@ def render_tab(active_tab, segments, countries, monetary_range, viz_technique):
 # MAIN
 # ──────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=8050)
+    app.run(debug=False, host='127.0.0.1', port=8050)
